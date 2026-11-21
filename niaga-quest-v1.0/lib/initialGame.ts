@@ -57,6 +57,30 @@ export const initialPlayers: Player[] = [
     completedPaths: 0,
     finishOrder: null,
   },
+  {
+    id: "npc-4",
+    name: "Ryan",
+    type: "npc",
+    isHost: false,
+    position: BOARD_START_POSITION,
+    status: "playing",
+    score: 0,
+    money: 1200,
+    completedPaths: 0,
+    finishOrder: null,
+  },
+  {
+    id: "npc-5",
+    name: "Emma",
+    type: "npc",
+    isHost: false,
+    position: BOARD_START_POSITION,
+    status: "playing",
+    score: 0,
+    money: 1200,
+    completedPaths: 0,
+    finishOrder: null,
+  },
 ];
 
 export const initialGameState: GameState = {
