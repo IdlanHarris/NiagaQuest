@@ -70,7 +70,7 @@ export default function GamePage() {
   const [showPresentation, setShowPresentation] = useState(false);
   const [plotNotice, setPlotNotice] = useState<PlotNotice | null>(null);
 
-  // Scenario evaluation state.
+  // Scenario evaluation state. 
   const [isVoting, setIsVoting] = useState(false);
   const [voteResult, setVoteResult] = useState<VoteResult | null>(null);
 
@@ -866,7 +866,7 @@ export default function GamePage() {
           <button
             type="button"
             onClick={() => setShowAdminController((open) => !open)}
-            className="rounded-lg border border-amber-300/40 bg-amber-400/10 px-3 py-2 text-xs font-bold text-amber-200 transition hover:bg-amber-400/20"
+            className="rounded-lg border border-[#B67DDB] bg-[#B67DDB] px-3 py-2 text-xs font-bold text-[#292D62] transition hover:bg-[#A66ACD]"
           >
             {showAdminController ? "Close Admin" : "Admin"}
           </button>

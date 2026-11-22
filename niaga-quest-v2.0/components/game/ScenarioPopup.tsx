@@ -94,7 +94,7 @@ export default function ScenarioPopup({
 
           {/* Next step */}
           <section className="rounded-xl border border-[#8A713C]/70 bg-[#443D2D]/50 p-4">
-            <h3 className="text-sm font-black text-amber-300">
+            <h3 className="text-sm font-black text-[#E8E2D4]">
               What happens next?
             </h3>
             <p className="mt-1 text-sm leading-relaxed text-slate-300">

@@ -333,8 +333,8 @@ export default function PresentationPanel({
 
           {isNpcPresenter && !isVoting && !voteResult && (
             <section className="rounded-xl border border-amber-300/30 bg-amber-300/5 p-4">
-              <p className="text-sm font-bold text-white">Your vote</p>
-              <p className="mt-1 text-xs text-slate-300">
+              <p className="text-sm font-bold text-[#292D62]">Your vote</p>
+              <p className="mt-1 text-xs text-[#42478B]">
                 Do you think this solution should pass the scenario?
               </p>
 
@@ -440,7 +440,7 @@ export default function PresentationPanel({
               </section>
 
               <div className="rounded-xl border border-amber-300/30 bg-amber-300/10 p-4 text-center">
-                <p className="text-sm font-semibold text-slate-200">
+                <p className="text-sm font-semibold text-[#292D62]">
                   NPCs are not required to agree to continue. The human player
                   must confirm before the next turn begins.
                 </p>

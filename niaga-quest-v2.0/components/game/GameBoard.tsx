@@ -393,27 +393,27 @@ export default function GameBoard({
         </div>
 
         {/* DICE CONTROL PANEL */}
-        <div className="shrink-0 h-[164px] bg-[#202D40] border border-slate-600/60 rounded-xl p-2.5 flex flex-col justify-between gap-1.5">
+        <div className="shrink-0 min-h-[142px] max-h-[150px] bg-[#42478B] border border-[#B67DDB] rounded-xl p-2 flex flex-col gap-1.5 overflow-hidden">
 
           {/* TURN INFORMATION */}
           <div className="w-full flex justify-between items-center">
             <div>
-              <p className="text-amber-300 text-[10px] font-bold tracking-widest">
+              <p className="text-[#E8E2D4] text-[10px] font-bold tracking-widest">
                 ROUND {round} · PLAYER TURN
               </p>
 
-              <p className="text-white text-sm font-bold">
+              <p className="text-[#FFFFFF] text-sm font-bold">
                 {activePlayer?.name ?? "Game completed"}
               </p>
             </div>
 
-            <span className={`rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-wide ${isRolling || isMoving ? "bg-amber-300/10 text-amber-200" : "bg-emerald-300/10 text-emerald-200"}`}>
+            <span className={`rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-wide ${isRolling || isMoving ? "bg-[#B67DDB] text-[#292D62]" : "bg-emerald-300/20 text-emerald-100"}`}>
               {isMoving ? "Moving" : isRolling ? "Rolling" : diceResult !== null ? "Result" : "Ready"}
             </span>
           </div>
 
           {/* 2D DICE */}
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex min-h-0 flex-1 items-center justify-center gap-3">
             <DiceFace value={diceResult} isRolling={isRolling} />
 
             <div className="min-w-0">
@@ -427,7 +427,7 @@ export default function GameBoard({
                       : "Roll the dice"}
               </p>
 
-              <p className="text-slate-400 text-[10px] mt-1">
+              <p className="text-[#E8E2D4] text-[10px] mt-1">
                 {isRolling
                   ? "Please wait"
                   : isMoving
@@ -447,7 +447,7 @@ export default function GameBoard({
               diceResult !== null ||
               activePlayer?.status === "finished"
             }
-            className="w-full bg-amber-400 hover:bg-amber-300 disabled:bg-slate-600 disabled:text-slate-400 text-slate-950 font-black py-2.5 px-4 rounded-lg text-sm transition-colors shadow-lg disabled:cursor-not-allowed"
+            className="mt-auto w-full shrink-0 bg-[#B67DDB] hover:bg-[#C895E5] active:bg-[#A66BCF] disabled:bg-[#777B9F] disabled:text-[#E8E2D4] text-[#292D62] font-black py-2 px-3 rounded-lg text-sm leading-5 transition-colors shadow-md disabled:cursor-not-allowed"
           >
             {isRolling
               ? "Rolling..."
@@ -461,8 +461,8 @@ export default function GameBoard({
       {/* DICE STYLING */}
       <style jsx global>{`
         .dice-2d-scene {
-          width: 76px;
-          height: 76px;
+          width: 56px;
+          height: 56px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -470,16 +470,16 @@ export default function GameBoard({
         }
 
         .dice-2d {
-          width: 62px;
-          height: 62px;
-          padding: 9px;
+          width: 48px;
+          height: 48px;
+          padding: 7px;
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           grid-template-rows: repeat(3, 1fr);
           gap: 3px;
           background: linear-gradient(145deg, #ffffff, #dce3eb);
           border: 2px solid #b6c3d2;
-          border-radius: 12px;
+          border-radius: 10px;
           box-shadow:
             0 5px 0 #9aa8b8,
             0 9px 16px rgba(0, 0, 0, 0.25),
@@ -496,7 +496,7 @@ export default function GameBoard({
         }
 
         .dice-pip-visible {
-          background: #172235;
+          background: #292D62;
           box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
         }
       `}</style>
