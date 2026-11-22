@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0b1220;
+  --foreground: #ededed;
+  --nq-accent: #fcd34d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html, body { min-height: 100%; }
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.nq-game-shell {
+  background: var(--background);
+  color: var(--foreground);
+  transition: background-color .2s ease, color .2s ease;
+}
+
+@keyframes nq-toast-in {
+  from { opacity: 0; transform: translate(-50%, -8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* Modern theme: deep blue-green surfaces with cyan accents. */
+[data-theme="modern"] {
+  --background: #07151d;
+  --foreground: #e7f4f5;
+  --nq-accent: #67e8f9;
+}
+
+[data-theme="modern"] [class*="bg-[#0B1220]"],
+[data-theme="modern"] [class*="bg-[#101725]"],
+[data-theme="modern"] [class*="bg-[#101B2D]"] {
+  background-color: #10232d !important;
+}
+
+[data-theme="modern"] [class*="bg-[#172438]"],
+[data-theme="modern"] [class*="bg-[#202B3D]"],
+[data-theme="modern"] [class*="bg-[#202D40]"],
+[data-theme="modern"] [class*="bg-[#1A2536]"],
+[data-theme="modern"] [class*="bg-[#26374B]"] {
+  background-color: #183441 !important;
+}
+
+[data-theme="modern"] [class*="bg-[#111B29]"],
+[data-theme="modern"] [class*="bg-[#0D142B]"],
+[data-theme="modern"] [class*="bg-[#0B1422]"] {
+  background-color: #0b1d26 !important;
+}
+
+[data-theme="modern"] [class*="border-slate"],
+[data-theme="modern"] [class*="border-[#65758A]"],
+[data-theme="modern"] [class*="border-[#607F91]"] {
+  border-color: #3b6471 !important;
+}
+
+[data-theme="modern"] [class*="bg-amber-"] {
+  background-color: #67e8f9 !important;
+}
+
+[data-theme="modern"] [class*="text-amber-"] {
+  color: #a5f3fc !important;
+}
+
+[data-theme="modern"] [class*="border-amber-"] {
+  border-color: #67e8f9 !important;
+}
+
+[data-theme="modern"] [class*="bg-sky-"] {
+  background-color: #164e63 !important;
+}
+
+[data-theme="modern"] [class*="text-sky-"] {
+  color: #a5f3fc !important;
+}
+
+[data-theme="modern"] [class*="border-sky-"] {
+  border-color: #22d3ee !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
