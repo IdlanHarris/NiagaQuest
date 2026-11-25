@@ -76,14 +76,16 @@ export default function PresentationPanel({
   }
 
   useEffect(() => {
-    if (!microphoneEnabled && isListening) {
-      const w = window as SpeechWindow;
-      w.__niagaQuestRecognition?.stop();
+    if (microphoneEnabled) return;
+
+    const w = window as SpeechWindow;
+    const recognition = w.__niagaQuestRecognition;
+
+    if (recognition) {
+      recognition.stop();
       w.__niagaQuestRecognition = null;
-      setIsListening(false);
-      setMicMessage("Microphone input has been disabled by the admin.");
     }
-  }, [microphoneEnabled, isListening]);
+  }, [microphoneEnabled]);
 
   function toggleMicrophone() {
     if (!microphoneEnabled) {
@@ -323,7 +325,7 @@ export default function PresentationPanel({
           {(isNpcPresenter || submitted || isVoting || voteResult) && (
             <section className="rounded-xl border border-slate-600 bg-[#172438] p-4">
               <p className="mb-2 text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">
-                {playerName}'s proposed solution
+                {playerName}&apos;s proposed solution
               </p>
               <p className="whitespace-pre-wrap text-sm leading-relaxed text-white">
                 {isNpcPresenter ? npcAnswer : answer}

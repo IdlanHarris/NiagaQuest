@@ -10,14 +10,21 @@ import AdminController from "@/components/game/AdminController";
 import TurnIndicator from "@/components/game/TurnIndicator";
 import PlotNotification from "@/components/game/PlotNotification";
 import FinalResults from "@/components/game/FinalResults";
+import { useGameReducer } from "@/hooks/useGameReducer";
 
 import { initialGameState } from "@/lib/initialGame";
+import { getNextTurn } from "@/lib/gameEngine";
 import {
   BOARD_FINISH_POSITION,
   BOARD_START_POSITION,
   boardPlots,
 } from "@/lib/board";
 import { scenarios } from "@/lib/scenarios";
+import {
+  clampBoardPosition,
+  calculateDiceDestination,
+  getMovementPath,
+} from "@/lib/gameMovement";
 
 import type { Scenario, Vote, VoteChoice } from "@/types/game";
 
@@ -36,20 +43,14 @@ type VoteResult = {
 };
 
 export default function GamePage() {
-  const [players, setPlayers] = useState(
-    () => initialGameState.players.map((player) => ({ ...player }))
-  );
+  const [gameState, dispatch] = useGameReducer();
 
-  // Start with the human player, even if the player array order changes.
-  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(() => {
-    const humanIndex = initialGameState.players.findIndex(
-      (player) => player.type === "human"
-    );
-    return humanIndex >= 0 ? humanIndex : 0;
-  });
-
-  const [turnSequence, setTurnSequence] = useState(0);
-  const [round, setRound] = useState(1);
+  const {
+  players,
+  currentPlayerIndex,
+  turnSequence,
+  round,
+} = gameState;
   const [theme, setTheme] = useState<"classic" | "modern">("classic");
 
   const npcTurnStartedRef = useRef<string | null>(null);
@@ -192,6 +193,7 @@ export default function GamePage() {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   }
 
+
   function finishTurn() {
     setCurrentScenario(null);
     setShowScenarioPopup(false);
@@ -203,83 +205,44 @@ export default function GamePage() {
     setIsRolling(false);
     setIsMoving(false);
 
-    let nextIndex = currentPlayerIndex;
+    const {
+      nextPlayerIndex,
+      shouldAdvanceRound,
+    } = getNextTurn(players, currentPlayerIndex);
 
-    for (let offset = 1; offset <= players.length; offset += 1) {
-      const candidateIndex =
-        (currentPlayerIndex + offset) % players.length;
-
-      if (players[candidateIndex]?.status !== "finished") {
-        nextIndex = candidateIndex;
-        break;
-      }
-    }
-
-    if (
-      nextIndex <= currentPlayerIndex &&
-      players[nextIndex]?.status !== "finished"
-    ) {
-      setRound((previousRound) => previousRound + 1);
-    }
-
-    setCurrentPlayerIndex(nextIndex);
-    setTurnSequence((previous) => previous + 1);
+    dispatch({
+      type: "FINISH_TURN",
+      nextPlayerIndex,
+      advanceRound: shouldAdvanceRound,
+    });
   }
 
-  async function movePlayerTo(destination: number, fromPosition: number) {
-    const boundedDestination = Math.max(
-      BOARD_START_POSITION,
-      Math.min(destination, BOARD_FINISH_POSITION)
-    );
+  async function movePlayerTo(
+    destination: number,
+    fromPosition: number
+  ) {
+    const boundedDestination = clampBoardPosition(destination);
 
     setNextPosition(boundedDestination);
     setIsMoving(true);
 
-    const currentPosition = fromPosition;
-    const direction = boundedDestination >= currentPosition ? 1 : -1;
+    const movementPath = getMovementPath(
+      fromPosition,
+      boundedDestination
+    );
 
-    for (
-      let position = currentPosition + direction;
-      direction > 0
-        ? position <= boundedDestination
-        : position >= boundedDestination;
-      position += direction
-    ) {
+    for (const position of movementPath) {
       await wait(400);
 
-      setPlayers((previousPlayers) => {
-        const nextFinishOrder =
-          Math.max(
-            0,
-            ...previousPlayers.map((player) => player.finishOrder ?? 0)
-          ) + 1;
-
-        return previousPlayers.map((player, index) => {
-          if (index !== currentPlayerIndex) return player;
-
-          const reachedFinish =
-            position === BOARD_FINISH_POSITION &&
-            player.status !== "finished";
-
-          return {
-            ...player,
-            position,
-            status:
-              position === BOARD_FINISH_POSITION
-                ? "finished" as const
-                : player.status,
-            finishOrder: reachedFinish
-              ? nextFinishOrder
-              : player.finishOrder,
-            completedPaths: reachedFinish
-              ? player.completedPaths + 1
-              : player.completedPaths,
-          };
-        });
+      dispatch({
+        type: "MOVE_PLAYER_STEP",
+        playerIndex: currentPlayerIndex,
+        position,
       });
     }
 
     setIsMoving(false);
+
     return boundedDestination;
   }
 
@@ -324,17 +287,13 @@ export default function GamePage() {
 
     // Apply money and score effects to the active player.
     if (moneyChange !== 0 || scoreChange !== 0) {
-      setPlayers((previousPlayers) =>
-        previousPlayers.map((player, index) =>
-          index === currentPlayerIndex
-            ? {
-                ...player,
-                money: player.money + moneyChange,
-                score: player.score + scoreChange,
-              }
-            : player
-        )
-      );
+      
+      dispatch({
+        type: "APPLY_PLAYER_EFFECT",
+        playerIndex: currentPlayerIndex,
+        moneyChange,
+        scoreChange,
+      });
 
       await showPlotResult({
         title: landedPlot.title,
@@ -402,17 +361,13 @@ export default function GamePage() {
           const finalScoreChange = finalPlot.effect?.score ?? 0;
 
           if (finalMoneyChange !== 0 || finalScoreChange !== 0) {
-            setPlayers((previousPlayers) =>
-              previousPlayers.map((player, index) =>
-                index === currentPlayerIndex
-                  ? {
-                      ...player,
-                      money: player.money + finalMoneyChange,
-                      score: player.score + finalScoreChange,
-                    }
-                  : player
-              )
-            );
+            
+            dispatch({
+              type: "APPLY_PLAYER_EFFECT",
+              playerIndex: currentPlayerIndex,
+              moneyChange: finalMoneyChange,
+              scoreChange: finalScoreChange,
+            });
 
             await showPlotResult({
               title: finalPlot.title,
@@ -448,9 +403,9 @@ export default function GamePage() {
     const result = Math.floor(Math.random() * 6) + 1;
     const startingPosition = activePlayer.position;
 
-    const destination = Math.min(
-      startingPosition + result,
-      BOARD_FINISH_POSITION
+    const destination = calculateDiceDestination(
+      startingPosition,
+      result
     );
 
     // Roll first. Do not reveal the destination until the dice stops.
@@ -701,7 +656,10 @@ export default function GamePage() {
       };
     });
 
-    setPlayers(updatedPlayers);
+    dispatch({
+      type: "SET_PLAYERS",
+      players: updatedPlayers,
+    });
 
     // If the active player is forced to finish, hand control to the next
     // unfinished player. The final-results overlay appears when everyone is done.
@@ -722,10 +680,11 @@ export default function GamePage() {
       setNextPosition(null);
       setPendingRetry(null);
 
-      if (nextIndex >= 0) {
-        setCurrentPlayerIndex(nextIndex);
-        setTurnSequence((previous) => previous + 1);
-      }
+      dispatch({
+        type: "SET_TURN",
+        playerIndex: nextIndex,
+        incrementSequence: true,
+      });
     }
   }
 
@@ -734,8 +693,9 @@ export default function GamePage() {
       (player) => player.id === playerId
     );
 
-    setPlayers((previousPlayers) =>
-      previousPlayers.map((player) =>
+    dispatch({
+      type: "SET_PLAYERS",
+      players: players.map((player) =>
         player.id === playerId
           ? {
               ...player,
@@ -745,12 +705,15 @@ export default function GamePage() {
               completedPaths: 0,
             }
           : player
-      )
-    );
+      ),
+    });
 
     if (resetIndex >= 0) {
-      setCurrentPlayerIndex(resetIndex);
-      setTurnSequence((previous) => previous + 1);
+      dispatch({
+        type: "SET_TURN",
+        playerIndex: resetIndex,
+        incrementSequence: true,
+      });
       setCurrentScenario(null);
       setShowScenarioPopup(false);
       setShowPresentation(false);
@@ -771,10 +734,11 @@ export default function GamePage() {
       (player) => player.type === "human"
     );
 
-    setPlayers(freshPlayers);
-    setCurrentPlayerIndex(firstHuman >= 0 ? firstHuman : 0);
-    setTurnSequence(0);
-    setRound(1);
+    dispatch({
+      type: "RESET_GAME",
+      players: freshPlayers,
+      currentPlayerIndex: firstHuman >= 0 ? firstHuman : 0,
+    });
 
     npcTurnStartedRef.current = null;
 

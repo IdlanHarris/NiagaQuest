@@ -1,0 +1,80 @@
+
+[
+  {
+    "id": "scenario-01",
+    "title": "Increasing Supplier Costs",
+    "description": "Your supplier suddenly increases the price of raw materials.",
+    "question": "How would you maintain your profit margin without losing customers?",
+    "npcAnswer": "I would negotiate with the supplier, compare alternative suppliers, and review operational costs while maintaining product quality."
+  },
+  {
+    "id": "scenario-02",
+    "title": "Declining Sales",
+    "description": "Your business experiences a significant decline in sales.",
+    "question": "What strategies would you introduce to attract more customers?",
+    "npcAnswer": "I would introduce promotional campaigns, improve customer engagement, and analyse customer preferences to improve our products."
+  },
+  {
+    "id": "scenario-03",
+    "title": "Customer Complaints",
+    "description": "Several customers complain about the quality of your products.",
+    "question": "How would you handle the complaints and restore customer trust?",
+    "npcAnswer": "I would investigate the complaints, improve quality control, offer appropriate solutions, and communicate transparently with customers."
+  },
+  {
+    "id": "scenario-04",
+    "title": "Business Competition",
+    "description": "A new competitor opens a business offering similar products at lower prices.",
+    "question": "How would you keep your business competitive?",
+    "npcAnswer": "I would differentiate my products, improve customer service, and introduce competitive pricing without compromising quality."
+  },
+  {
+    "id": "scenario-05",
+    "title": "Limited Business Capital",
+    "description": "Your business has limited funds to expand its operations.",
+    "question": "How would you manage your available capital and prioritise business growth?",
+    "npcAnswer": "I would prioritise essential expenses, monitor cash flow, and invest in activities that provide the highest business value."
+  },
+  {
+    "id": "scenario-06",
+    "title": "Supply Chain Disruption",
+    "description": "Your business experiences unexpected supply disruptions.",
+    "question": "How would you maintain business operations when your usual supplies are unavailable?",
+    "npcAnswer": "I would identify alternative suppliers, prioritise essential inventory, and communicate with customers about any delays."
+  },
+  {
+    "id": "scenario-07",
+    "title": "Viral Marketing",
+    "description": "Your product suddenly becomes popular online.",
+    "question": "How would you manage the sudden increase in customer demand?",
+    "npcAnswer": "I would monitor inventory, organise additional production capacity, and maintain consistent product quality while responding to customers."
+  },
+  {
+    "id": "scenario-08",
+    "title": "Natural Disaster",
+    "description": "A natural disaster affects your business operations.",
+    "question": "What steps would you take to minimise disruption and recover your business?",
+    "npcAnswer": "I would prioritise safety, assess business losses, communicate with stakeholders, and develop a recovery plan."
+  },
+  {
+    "id": "scenario-09",
+    "title": "Halal Certification",
+    "description": "Your business needs to address certification requirements.",
+    "question": "How would you prepare your business to meet the required certification standards?",
+    "npcAnswer": "I would review the certification requirements, improve relevant business processes, prepare documentation, and seek guidance from the appropriate authorities."
+  },
+  {
+    "id": "scenario-10",
+    "title": "Sustainable Production",
+    "description": "Your business must reduce production waste.",
+    "question": "How would you reduce waste without significantly increasing operating costs?",
+    "npcAnswer": "I would review production processes, reuse suitable materials, improve inventory planning, and monitor resource consumption."
+  },
+  {
+    "id": "scenario-11",
+    "title": "Business Sustainability",
+    "description": "Your business must balance profitability and sustainability.",
+    "question": "How would you maintain profitability while adopting more sustainable business practices?",
+    "npcAnswer": "I would identify cost-effective sustainable practices, reduce unnecessary resource usage, and communicate the long-term benefits to customers."
+  }
+]
